@@ -122,6 +122,13 @@ function render() {
       <section id="case" class="case-section section-shell">
         <div class="section-heading reveal"><div><p class="eyebrow"><span class="eyebrow-line"></span>主案例 / CASE 01</p><h2>AI 合同审查<br />与知识沉淀工具</h2></div><div class="heading-aside"><span class="case-stamp">个人实践项目</span><p>从合同审查现场出发，设计一条可复核、可沉淀、可交付的 AI 工作流。</p></div></div>
         <div class="case-overview reveal"><div class="case-summary"><span class="label">PROJECT BRIEF</span><p class="large-copy">把律师打开 Word、翻知识库、找风险、写修改意见的重复动作，重新组织成一条有证据链的工作流。</p><div class="case-tags"><span>Python</span><span>LLM API</span><span>Docling</span><span>Markdown / HTML</span></div></div><div class="decision-list"><div><span>问题</span><b>信息散落在合同、参考材料和律师经验里</b></div><div><span>决策</span><b>先结构化与路由，再让模型按规则输出</b></div><div><span>交付</span><b>逐条清单 + 可复制条款 + HTML 改稿台</b></div></div></div>
+        <div class="review-result reveal">
+          <div class="result-top"><div><span class="label">REVIEW RESULT / REDACTED DEMO</span><h3>审查完成后的结果预览</h3></div><div class="result-status"><span class="live-dot"></span>已生成 · 可复核</div></div>
+          <div class="result-workspace">
+            <div class="contract-pane"><div class="pane-title"><span>合同原文</span><span class="mono">page 03 / 12</span></div><div class="contract-paper"><span class="paper-meta">采购服务合同 · 脱敏演示样本</span><p>第五条　付款方式</p><p>1. 合同总价为人民币<span class="paper-mark">【壹拾万元】</span>，乙方完成服务后，甲方一次性支付全部合同款项。</p><p>2. 甲方将合同款项付至乙方指定账户后，视为甲方已履行付款义务。</p><span class="paper-highlight"></span><span class="paper-note">R-07</span></div><div class="contract-foot"><span class="page-dot"></span>已保留原文定位与页码</div></div>
+            <div class="result-pane"><div class="pane-title"><span>审查结果</span><span class="result-count">26 项风险</span></div><div class="result-summary"><div><b>7</b><span>S级</span></div><div><b>9</b><span>A级</span></div><div><b>6</b><span>B级</span></div><div><b>4</b><span>C级</span></div></div><article class="result-risk"><div class="result-risk-head"><span class="risk-level s">S</span><div><b>付款前提未绑定验收</b><small>第五条第 1 款 · page 03</small></div><span class="risk-state">待处理</span></div><div class="result-block"><span>风险后果</span><p>服务质量出现争议时，甲方已完成付款，缺乏以验收结果控制付款的抓手。</p></div><div class="result-block recommended"><span>推荐修复文本</span><p>乙方完成服务并经甲方书面验收确认，且提交符合规定的发票及完整付款资料后，甲方于 30 个工作日内支付合同款项。</p><button class="copy-result" type="button" data-result-copy>${icon('copy')}复制修复文本</button></div></article><div class="result-bottom"><span>${icon('check')} 定位 → 后果 → 条款，形成完整证据链</span><span class="mono">HTML REPORT</span></div></div>
+          </div>
+        </div>
       </section>
 
       <section class="deep-dive section-shell reveal"><div class="section-label"><span>CASE STUDY / DEEP DIVE</span><span>可在面试中展开</span></div><div class="tab-layout"><div class="tab-list" role="tablist" aria-label="案例细节"><p class="tab-intro">合同审查不是一次性生成，而是一个需要被业务理解、被评测、被持续运营的产品能力。</p>${projectTabs.map((tab, index) => `<button class="tab-button ${index === 0 ? 'active' : ''}" type="button" data-tab="${tab.id}" role="tab" aria-selected="${index === 0}"><span><small>${tab.eyebrow}</small><b>${tab.label}</b></span>${icon('arrow')}</button>`).join('')}</div><div id="tab-content" class="tab-content"></div></div></section>
@@ -173,6 +180,16 @@ async function copyPitch() {
 function bindInteractions() {
   document.querySelectorAll('.tab-button').forEach((button) => button.addEventListener('click', () => renderTab(button.dataset.tab)));
   document.querySelector('[data-copy-pitch]').addEventListener('click', copyPitch);
+  document.querySelector('[data-result-copy]').addEventListener('click', async (event) => {
+    const text = '乙方完成服务并经甲方书面验收确认，且提交符合规定的发票及完整付款资料后，甲方于30个工作日内支付合同款项。';
+    try {
+      await navigator.clipboard.writeText(text);
+      event.currentTarget.innerHTML = `${icon('check')}已复制`;
+      showToast('修复文本已复制');
+    } catch {
+      showToast('浏览器未允许自动复制');
+    }
+  });
   const revealItems = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: 0.12 });
   revealItems.forEach((item) => observer.observe(item));
