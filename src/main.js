@@ -70,6 +70,47 @@ const projectTabs = [
   },
 ];
 
+const reviewTasks = [
+  {
+    id: 'risk-1',
+    level: 'S',
+    title: '付款前提未绑定验收',
+    location: '第五条第 1 款 · page 03',
+    anchor: '乙方完成服务后，甲方一次性支付全部合同款项。',
+    consequence: '服务质量出现争议时，甲方已经完成付款，缺乏以验收结果控制付款的抓手。',
+    clause: '乙方完成服务并经甲方书面验收确认，且提交符合规定的发票及完整付款资料后，甲方于30个工作日内支付合同款项。',
+  },
+  {
+    id: 'risk-2',
+    level: 'A',
+    title: '收款账户变更责任缺失',
+    location: '第五条第 2 款 · page 03',
+    anchor: '甲方将合同款项付至乙方指定账户后，视为履行付款义务。',
+    consequence: '账户错误或变更未及时通知时，付款失败、迟延或错付的责任边界不清。',
+    clause: '乙方应保证收款账户信息真实准确；账户变更应提前7个工作日书面通知甲方，因未及时通知或账户错误造成的损失由乙方承担。',
+  },
+  {
+    id: 'risk-3',
+    level: 'B',
+    title: '附件与正文口径不一致',
+    location: '第一条 / 报价单 · page 02',
+    anchor: '本合同服务范围详见报价单。',
+    consequence: '附件缺失或记载不清时，双方对服务范围、数量和计价方式容易产生争议。',
+    clause: '本合同服务范围以双方盖章确认的附件为准；超出附件约定范围的服务，双方应另行协商并签署书面补充协议。',
+  },
+];
+
+function renderReviewWorkbench() {
+  return `<div class="review-workbench reveal" data-report>
+    <div class="report-topbar"><div><span class="report-kicker">REVIEW REPORT / REDACTED DEMO</span><h3>采购服务合同 · 懒人改稿台</h3><p>S级风险：7项　A级风险：9项　B级风险：6项　C级风险：4项</p></div><div class="report-tools"><button type="button" data-report-filter="pending">只看未处理</button><button type="button" data-report-filter="all">显示全部</button></div></div>
+    <div class="report-context"><div class="context-main"><span class="report-section-label">审查背景</span><h4>甲方 / 学校采购服务合同 / 强势谈判立场</h4><p>审查目标：锁定主体、价款、付款、验收、违约和附件一致性；输出可定位、可复核、可直接复制进合同的改稿建议。</p></div><div class="context-facts"><div><span>输入</span><b>DOCX</b><small>结构化解析</small></div><div><span>知识</span><b>按需路由</b><small>客户与交易类型</small></div><div><span>输出</span><b>HTML</b><small>顺序改稿台</small></div></div></div>
+    <div class="report-metrics"><div><b>26</b><span>结构化风险项</span><small>本次脱敏演示样本</small></div><div><b>100<span>+</span></b><span>合同测试样本</span><small>个人实践口径</small></div><div><b>1h <i>→</i> 20m</b><span>单份初审耗时</span><small>个人实践口径</small></div><div><b>95<span>%+</span></b><span>常规风险识别</span><small>个人实践口径</small></div></div>
+    <div class="report-progress"><span>按合同顺序处理</span><span><b data-report-done>0</b> / ${reviewTasks.length} 已处理</span></div>
+    <div class="report-tasks">${reviewTasks.map((task, index) => `<article class="report-task ${index === 0 ? 'is-active' : ''}" data-task-id="${task.id}"><div class="report-task-head"><button class="report-number" type="button" data-report-copy="${task.anchor}" aria-label="复制第 ${index + 1} 条风险定位">${index + 1}</button><div><h4><span class="report-level level-${task.level.toLowerCase()}">${task.level}</span>${task.title}</h4><small>${task.location}</small></div><button class="report-done" type="button" data-report-done-toggle>未处理</button></div><div class="report-task-grid"><div class="report-info"><span>定位原文</span><p>${task.anchor}</p></div><div class="report-info"><span>风险后果</span><p>${task.consequence}</p></div><div class="report-info report-recommend"><span>推荐条款1</span><p>${task.clause}</p></div></div><div class="report-task-actions"><button type="button" data-report-copy="${task.anchor}">复制定位</button><button type="button" class="primary-action" data-report-copy="${task.clause}">复制推荐条款</button><button type="button" data-report-copy="${task.consequence}">复制后果</button></div></article>`).join('')}</div>
+    <div class="report-next"><span data-report-hint>当前第 1 条 · 处理完成后进入下一条</span><button type="button" data-report-next>标记完成并下一条 ${icon('arrow')}</button></div>
+  </div>`;
+}
+
 function render() {
   document.querySelector('#app').innerHTML = `
     <header class="site-header">
@@ -122,13 +163,7 @@ function render() {
       <section id="case" class="case-section section-shell">
         <div class="section-heading reveal"><div><p class="eyebrow"><span class="eyebrow-line"></span>主案例 / CASE 01</p><h2>AI 合同审查<br />与知识沉淀工具</h2></div><div class="heading-aside"><span class="case-stamp">个人实践项目</span><p>从合同审查现场出发，设计一条可复核、可沉淀、可交付的 AI 工作流。</p></div></div>
         <div class="case-overview reveal"><div class="case-summary"><span class="label">PROJECT BRIEF</span><p class="large-copy">把律师打开 Word、翻知识库、找风险、写修改意见的重复动作，重新组织成一条有证据链的工作流。</p><div class="case-tags"><span>Python</span><span>LLM API</span><span>Docling</span><span>Markdown / HTML</span></div></div><div class="decision-list"><div><span>问题</span><b>信息散落在合同、参考材料和律师经验里</b></div><div><span>决策</span><b>先结构化与路由，再让模型按规则输出</b></div><div><span>交付</span><b>逐条清单 + 可复制条款 + HTML 改稿台</b></div></div></div>
-        <div class="review-result reveal">
-          <div class="result-top"><div><span class="label">REVIEW RESULT / REDACTED DEMO</span><h3>审查完成后的结果预览</h3></div><div class="result-status"><span class="live-dot"></span>已生成 · 可复核</div></div>
-          <div class="result-workspace">
-            <div class="contract-pane"><div class="pane-title"><span>合同原文</span><span class="mono">page 03 / 12</span></div><div class="contract-paper"><span class="paper-meta">采购服务合同 · 脱敏演示样本</span><p>第五条　付款方式</p><p>1. 合同总价为人民币<span class="paper-mark">【壹拾万元】</span>，乙方完成服务后，甲方一次性支付全部合同款项。</p><p>2. 甲方将合同款项付至乙方指定账户后，视为甲方已履行付款义务。</p><span class="paper-highlight"></span><span class="paper-note">R-07</span></div><div class="contract-foot"><span class="page-dot"></span>已保留原文定位与页码</div></div>
-            <div class="result-pane"><div class="pane-title"><span>审查结果</span><span class="result-count">26 项风险</span></div><div class="result-summary"><div><b>7</b><span>S级</span></div><div><b>9</b><span>A级</span></div><div><b>6</b><span>B级</span></div><div><b>4</b><span>C级</span></div></div><article class="result-risk"><div class="result-risk-head"><span class="risk-level s">S</span><div><b>付款前提未绑定验收</b><small>第五条第 1 款 · page 03</small></div><span class="risk-state">待处理</span></div><div class="result-block"><span>风险后果</span><p>服务质量出现争议时，甲方已完成付款，缺乏以验收结果控制付款的抓手。</p></div><div class="result-block recommended"><span>推荐修复文本</span><p>乙方完成服务并经甲方书面验收确认，且提交符合规定的发票及完整付款资料后，甲方于 30 个工作日内支付合同款项。</p><button class="copy-result" type="button" data-result-copy>${icon('copy')}复制修复文本</button></div></article><div class="result-bottom"><span>${icon('check')} 定位 → 后果 → 条款，形成完整证据链</span><span class="mono">HTML REPORT</span></div></div>
-          </div>
-        </div>
+        ${renderReviewWorkbench()}
       </section>
 
       <section class="deep-dive section-shell reveal"><div class="section-label"><span>CASE STUDY / DEEP DIVE</span><span>可在面试中展开</span></div><div class="tab-layout"><div class="tab-list" role="tablist" aria-label="案例细节"><p class="tab-intro">合同审查不是一次性生成，而是一个需要被业务理解、被评测、被持续运营的产品能力。</p>${projectTabs.map((tab, index) => `<button class="tab-button ${index === 0 ? 'active' : ''}" type="button" data-tab="${tab.id}" role="tab" aria-selected="${index === 0}"><span><small>${tab.eyebrow}</small><b>${tab.label}</b></span>${icon('arrow')}</button>`).join('')}</div><div id="tab-content" class="tab-content"></div></div></section>
@@ -180,19 +215,48 @@ async function copyPitch() {
 function bindInteractions() {
   document.querySelectorAll('.tab-button').forEach((button) => button.addEventListener('click', () => renderTab(button.dataset.tab)));
   document.querySelector('[data-copy-pitch]').addEventListener('click', copyPitch);
-  document.querySelector('[data-result-copy]').addEventListener('click', async (event) => {
-    const text = '乙方完成服务并经甲方书面验收确认，且提交符合规定的发票及完整付款资料后，甲方于30个工作日内支付合同款项。';
+  document.querySelectorAll('[data-report-copy]').forEach((button) => button.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      event.currentTarget.innerHTML = `${icon('check')}已复制`;
-      showToast('修复文本已复制');
+      await navigator.clipboard.writeText(button.dataset.reportCopy);
+      showToast('内容已复制');
     } catch {
       showToast('浏览器未允许自动复制');
     }
+  }));
+  document.querySelectorAll('[data-report-done-toggle]').forEach((button) => button.addEventListener('click', () => {
+    const task = button.closest('.report-task');
+    task.classList.toggle('is-done');
+    button.textContent = task.classList.contains('is-done') ? '已处理' : '未处理';
+    refreshReportProgress();
+  }));
+  document.querySelectorAll('[data-report-filter]').forEach((button) => button.addEventListener('click', () => {
+    const pendingOnly = button.dataset.reportFilter === 'pending';
+    document.querySelectorAll('.report-task').forEach((task) => { task.style.display = pendingOnly && task.classList.contains('is-done') ? 'none' : ''; });
+  }));
+  document.querySelector('[data-report-next]').addEventListener('click', () => {
+    const current = document.querySelector('.report-task:not(.is-done)');
+    if (!current) { showToast('全部处理完啦'); return; }
+    current.classList.add('is-done');
+    current.querySelector('[data-report-done-toggle]').textContent = '已处理';
+    refreshReportProgress();
+    const next = document.querySelector('.report-task:not(.is-done)');
+    if (next) { next.scrollIntoView({ behavior: 'smooth', block: 'center' }); showToast('已进入下一条'); }
+    else showToast('全部处理完啦');
   });
   const revealItems = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: 0.12 });
   revealItems.forEach((item) => observer.observe(item));
+}
+
+function refreshReportProgress() {
+  const tasks = [...document.querySelectorAll('.report-task')];
+  const done = tasks.filter((task) => task.classList.contains('is-done')).length;
+  document.querySelector('[data-report-done]').textContent = String(done);
+  const next = tasks.find((task) => !task.classList.contains('is-done'));
+  tasks.forEach((task) => task.classList.toggle('is-active', task === next));
+  const hint = document.querySelector('[data-report-hint]');
+  if (next) hint.textContent = `当前第 ${tasks.indexOf(next) + 1} 条 · 处理完成后进入下一条`;
+  else hint.textContent = '全部风险已处理，可导出最终改稿';
 }
 
 render();
