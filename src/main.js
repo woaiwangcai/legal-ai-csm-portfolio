@@ -140,7 +140,6 @@ function render() {
           <p class="hero-body">我用一线法律实践识别真实流程中的摩擦，再用 Python、LLM 和结构化方法把它做成能被团队使用、评测和持续改进的工具。</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#case">查看主案例 ${icon('arrow')}</a>
-            <button class="button button-quiet" type="button" data-copy-pitch>复制 60 秒讲解 ${icon('copy')}</button>
           </div>
           <div class="hero-meta"><span><b>法律职业资格</b> A 证</span><span><b>法学本科</b> 湖南工业大学</span><span><b>当前方向</b> 产品型 CSM</span></div>
         </div>
@@ -219,19 +218,8 @@ function showToast(message) {
   showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-async function copyPitch() {
-  const pitch = '我是郑又洪，法学本科并持有法律职业资格A证。过去在律所参与商事合同审查、诉讼文书和法院程序，也在真实业务中用 Python 和大模型搭建了合同审查与知识沉淀工具。这个项目不是简单把合同交给模型，而是把 DOCX 结构化解析、客户与交易类型路由、知识库、规则约束、模型调用和可复核报告串成一条工作流。我希望把这种既理解法律场景、又能把 AI 做成产品并推动客户使用的能力，带到法律 AI 的客户成功岗位中。';
-  try {
-    await navigator.clipboard.writeText(pitch);
-    showToast('60 秒项目讲解已复制');
-  } catch {
-    showToast('浏览器未允许自动复制，请直接从页面讲解');
-  }
-}
-
 function bindInteractions() {
   document.querySelectorAll('.tab-button').forEach((button) => button.addEventListener('click', () => renderTab(button.dataset.tab)));
-  document.querySelector('[data-copy-pitch]').addEventListener('click', copyPitch);
   document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => {
     document.getElementById(button.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }));
