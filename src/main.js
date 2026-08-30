@@ -1,4 +1,5 @@
 import './styles.css';
+import publishedMarkup from './published-markup.html?raw';
 
 const isLocalPreview = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
 const portfolioUrl = isLocalPreview ? '' : `${window.location.origin}${window.location.pathname}`;
@@ -121,7 +122,7 @@ function render() {
     : `<div class="qr-offline"><b>本地预览</b><span>部署后生成二维码</span></div>`;
   const app = document.querySelector('#app');
   const savedMarkup = loadEditState();
-  app.innerHTML = savedMarkup || `
+  app.innerHTML = savedMarkup || publishedMarkup || `
     <header class="site-header">
       <a class="brand" href="#top" aria-label="回到首页"><span class="brand-mark">ZH</span><span>LEGAL AI / CSM</span></a>
       <nav class="main-nav" aria-label="主导航">
@@ -189,7 +190,7 @@ function render() {
     <footer class="site-footer"><div><span class="brand-mark">ZH</span> 郑又洪 / Legal AI CSM Portfolio</div><span>个人实践项目 · 不含真实客户隐私与密钥</span><a href="#top">回到顶部 ${icon('arrow')}</a></footer>
     <div class="toast" role="status" aria-live="polite"></div>
   `;
-  if (!savedMarkup) renderTab('flow');
+  if (!savedMarkup && !publishedMarkup.trim()) renderTab('flow');
   bindInteractions();
   setupEditMode();
 }
