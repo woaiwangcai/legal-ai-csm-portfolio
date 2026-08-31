@@ -1,6 +1,6 @@
 # Legal AI CSM Portfolio
 
-郑又洪的法律 AI 产品型 CSM 面试作品集。
+我的法律 AI 产品型 CSM 面试作品集。
 
 在线入口（GitHub Pages）：
 
